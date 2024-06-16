@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Usage:
+# bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/ansible-user-add.sh)"
+
 # Prompt for the password
 read -sp 'Enter password for ansible user: ' PASSWORD
 echo
