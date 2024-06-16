@@ -71,4 +71,15 @@ else
     echo "${GREEN}tldr is already installed. Skipping.${NC}"
 fi
 
+# Install Ansible
+if ! command -v ansible &> /dev/null; then
+    echo "${YELLOW}Installing Ansible...${NC}"
+    sudo apt update
+    sudo apt install -y software-properties-common
+    sudo add-apt-repository --yes --update ppa:ansible/ansible
+    sudo apt install -y ansible
+else
+    echo "${GREEN}Ansible is already installed. Skipping.${NC}"
+fi
+
 echo "${GREEN}Development environment setup complete!${NC}"
