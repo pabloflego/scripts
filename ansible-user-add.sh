@@ -9,49 +9,51 @@ YELLOW=$(tput setaf 3)
 RED=$(tput setaf 1)
 NC=$(tput sgr0) # No Color
 
-# Prompt for the password
-read -sp 'Enter password for ansible user: ' PASSWORD
-echo
-
-# Prompt for the SSH public key
-read -p 'Enter SSH public key for ansible user: ' SSH_KEY
-
 # Check if the ansible user already exists
 if id "ansible" &>/dev/null; then
-    echo "${GREEN}User 'ansible' already exists. Skipping user creation.${NC}"
+    echo "${GREEN}User 'ansible' already exists. Skipping user creation and SSH key configuration.${NC}"
 else
+    # Prompt for the password
+    read -sp 'Enter password for ansible user: ' PASSWORD
+    echo
+
+    # Prompt for the SSH public key
+    read -p 'Enter SSH public key for ansible user: ' SSH_KEY
+
     # Add ansible user
     echo "${YELLOW}Creating ansible user...${NC}"
-    useradd -m -s /bin/bash ansible
+    if useradd -m -s /bin/bash ansible; then
+        echo "${GREEN}User 'ansible' created successfully.${NC}"
 
-    # Set the password for ansible user
-    echo "ansible:$PASSWORD" | chpasswd
+        # Set the password for ansible user
+        echo "ansible:$PASSWORD" | chpasswd
+        echo "${GREEN}Password set for ansible user.${NC}"
 
-    # Add ansible user to sudoers
-    usermod -aG sudo ansible
+        # Add ansible user to sudoers
+        if usermod -aG sudo ansible; then
+            echo "${GREEN}User 'ansible' added to sudo group.${NC}"
+        else
+            echo "${RED}Failed to add user 'ansible' to sudo group.${NC}"
+        fi
 
-    echo "${GREEN}User 'ansible' created successfully.${NC}"
-fi
+        # Configure SSH key-based authentication
+        SSH_DIR="/home/ansible/.ssh"
+        AUTH_KEYS="$SSH_DIR/authorized_keys"
 
-# Configure SSH key-based authentication if not already configured
-SSH_DIR="/home/ansible/.ssh"
-AUTH_KEYS="$SSH_DIR/authorized_keys"
+        echo "${YELLOW}Setting up SSH directory...${NC}"
+        mkdir -p "$SSH_DIR"
+        chown ansible:ansible "$SSH_DIR"
+        chmod 700 "$SSH_DIR"
 
-if [ ! -d "$SSH_DIR" ]; then
-    echo "${YELLOW}Setting up SSH directory...${NC}"
-    mkdir -p "$SSH_DIR"
-    chown ansible:ansible "$SSH_DIR"
-    chmod 700 "$SSH_DIR"
-fi
+        echo "${YELLOW}Adding SSH key to authorized_keys...${NC}"
+        echo "$SSH_KEY" >> "$AUTH_KEYS"
+        chown ansible:ansible "$AUTH_KEYS"
+        chmod 600 "$AUTH_KEYS"
+        echo "${GREEN}SSH key added successfully.${NC}"
 
-if grep -q "$SSH_KEY" "$AUTH_KEYS" 2>/dev/null; then
-    echo "${GREEN}SSH key already exists in authorized_keys. Skipping.${NC}"
-else
-    echo "${YELLOW}Adding SSH key to authorized_keys...${NC}"
-    echo "$SSH_KEY" >> "$AUTH_KEYS"
-    chown ansible:ansible "$AUTH_KEYS"
-    chmod 600 "$AUTH_KEYS"
-    echo "${GREEN}SSH key added successfully.${NC}"
+    else
+        echo "${RED}Failed to create user 'ansible'.${NC}"
+    fi
 fi
 
 # Add ansible user to sudoers with NOPASSWD if not already set
