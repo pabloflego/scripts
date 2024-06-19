@@ -67,4 +67,7 @@ else
     echo "${GREEN}ansible user added to sudoers with NOPASSWD.${NC}"
 fi
 
+# Call the check-enable-ssh.sh script
+bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/check-enable-ssh.sh)"
+
 echo "${GREEN}Ansible user setup completed successfully.${NC}"
