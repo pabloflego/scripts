@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage:
-# bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/check-enable-ssh.sh)"
+# bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/task/check-enable-ssh.sh)"
 
 # Colors for echo messages
 GREEN=$(tput setaf 2)

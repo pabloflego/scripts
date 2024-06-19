@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage:
-# bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/ansible-user-add.sh)"
+# bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/task/ansible-user-add.sh)"
 
 # Colors for echo messages
 GREEN=$(tput setaf 2)

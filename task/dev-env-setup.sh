@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage:
-# bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/dev-env-setup.sh)"
+# bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/task/dev-env-setup.sh)"
 
 # Colors for echo messages
 GREEN=$(tput setaf 2)
