@@ -3,11 +3,8 @@
 # Usage:
 # bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/task/dev-env-setup.sh)"
 
-# Colors for echo messages
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-RED=$(tput setaf 1)
-NC=$(tput sgr0) # No Color
+# Include colors
+source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/lib/cli-colors.sh)
 
 # Prompt for email and name
 read -p "Enter your email for SSH key and Git configuration: " email
