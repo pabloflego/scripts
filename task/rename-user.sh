@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Usage:
-# sudo bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/task/rename-user.sh)" oldusername newusername
+# bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/task/rename-user.sh)" oldusername newusername
 
 # Include colors
 source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/lib/cli-colors.sh)
 
 if [ "$#" -ne 2 ]; then
-    echo "${RED}Usage: sudo bash -c \"\$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/task/rename-user.sh)\" oldusername newusername${NC}"
+    echo "${RED}Usage: bash -c \"\$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/task/rename-user.sh)\" oldusername newusername${NC}"
     exit 1
 fi
 
