@@ -8,60 +8,54 @@ source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/lib/cli-colors
 
 echo "${YELLOW}Development Environment Setup${NC}"
 
-# Function to show checkbox options
+# Ensure whiptail is installed
+if ! command -v whiptail &> /dev/null; then
+    echo "${YELLOW}Installing whiptail...${NC}"
+    sudo apt-get install -y whiptail
+fi
+
+# Function to show checkbox options using whiptail
 show_checkboxes() {
-    options=(
-        "Configure Git"
-        "Install Zsh"
-        "Install Oh My Zsh"
-        "Install tldr"
-        "Install Ansible"
-        "Install passlib for Python 3"
-        "Install Node Version Manager (NVM)"
-    )
-
-    selections=()
-
-    for opt in "${options[@]}"; do
-        selections+=("false")
-    done
-
-    for i in "${!options[@]}"; do
-        read -p "${options[$i]}? [y/n]: " choice
-        if [[ "$choice" =~ ^[yY]$ ]]; then
-            selections[$i]="true"
-        fi
-    done
-
-    echo "${selections[@]}"
+    whiptail --title "Development Environment Setup" --checklist \
+    "Choose options to install:" 20 78 10 \
+    "Configure_Git" "" OFF \
+    "Install_Zsh" "" OFF \
+    "Install_Oh_My_Zsh" "" OFF \
+    "Install_tldr" "" OFF \
+    "Install_Ansible" "" OFF \
+    "Install_passlib_for_Python_3" "" OFF \
+    "Install_Node_Version_Manager_(NVM)" "" OFF 3>&1 1>&2 2>&3
 }
 
 # Get user selections
-selections=($(show_checkboxes))
+selections=$(show_checkboxes)
+
+# Print selections for debugging
+echo "Selections: $selections"
 
 # Update and upgrade the distro
 echo "${YELLOW}Updating and upgrading the distro...${NC}"
 sudo apt update && sudo apt upgrade -y
 
 # Base URL for modules
-BASE_URL="https://github.com/pabloflego/scripts/raw/main/modules"
+BASE_URL="https://github.com/pabloflego/scripts/raw/main/module"
 
 # List of modules
+declare -A modules
 modules=(
-    "configure_git.sh"
-    "install_zsh.sh"
-    "install_oh_my_zsh.sh"
-    "install_tldr.sh"
-    "install_ansible.sh"
-    "install_passlib.sh"
-    "install_nvm.sh"
+    ["Configure_Git"]="configure_git.sh"
+    ["Install_Zsh"]="install_zsh.sh"
+    ["Install_Oh_My_Zsh"]="install_oh_my_zsh.sh"
+    ["Install_tldr"]="install_tldr.sh"
+    ["Install_Ansible"]="install_ansible.sh"
+    ["Install_passlib_for_Python_3"]="install_passlib.sh"
+    ["Install_Node_Version_Manager_(NVM)"]="install_nvm.sh"
 )
 
 # Execute based on selections
-for i in "${!selections[@]}"; do
-    if [ "${selections[$i]}" == "true" ]; then
-        source <(wget -qO- "${BASE_URL}/${modules[$i]}")
-    fi
+for selection in $selections; do
+    module=$(echo $selection | tr -d '"')
+    source <(wget -qO- "${BASE_URL}/${modules[$module]}")
 done
 
 echo "${GREEN}Development environment setup complete!${NC}"
