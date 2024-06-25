@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage:
-# bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/tasks/dev-env-setup.sh)"
+# bash -c "$(wget -qLO - https://github.com/pabloflego/scripts/raw/main/task/dev-env-setup.sh)"
 
 # Include colors
 source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/lib/cli-colors.sh)
@@ -26,31 +26,31 @@ sudo apt update && sudo apt upgrade -y
 
 # Prompt for each module
 if ask_choice "Do you want to configure Git?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/modules/configure_git.sh)
+    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/configure_git.sh)
 fi
 
 if ask_choice "Do you want to install Zsh?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/modules/install_zsh.sh)
+    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_zsh.sh)
 fi
 
 if ask_choice "Do you want to install Oh My Zsh?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/modules/install_oh_my_zsh.sh)
+    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_oh_my_zsh.sh)
 fi
 
 if ask_choice "Do you want to install tldr?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/modules/install_tldr.sh)
+    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_tldr.sh)
 fi
 
 if ask_choice "Do you want to install Ansible?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/modules/install_ansible.sh)
+    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_ansible.sh)
 fi
 
 if ask_choice "Do you want to install passlib for Python 3?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/modules/install_passlib.sh)
+    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_passlib.sh)
 fi
 
 if ask_choice "Do you want to install Node Version Manager (NVM)?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/modules/install_nvm.sh)
+    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_nvm.sh)
 fi
 
 echo "${GREEN}Development environment setup complete!${NC}"
