@@ -18,8 +18,8 @@ fi
 echo "${GREEN}Latest version is ${latest_version}.${NC}"
 
 # Define the download URL and file name
-download_url="https://github.com/prometheus/node_exporter/releases/download/${latest_version}/node_exporter-${latest_version}.linux-amd64.tar.gz"
-file_name="node_exporter-${latest_version}.linux-amd64.tar.gz"
+download_url="https://github.com/prometheus/node_exporter/releases/download/${latest_version}/node_exporter-${latest_version#v}.linux-amd64.tar.gz"
+file_name="node_exporter-${latest_version#v}.linux-amd64.tar.gz"
 
 # Download the latest version of Prometheus Node Exporter
 echo "${YELLOW}Downloading Prometheus Node Exporter...${NC}"
@@ -41,7 +41,7 @@ fi
 
 # Move the binary to /usr/local/bin
 echo "${YELLOW}Installing Prometheus Node Exporter...${NC}"
-sudo mv node_exporter-${latest_version}.linux-amd64/node_exporter /usr/local/bin/
+sudo mv node_exporter-${latest_version#v}.linux-amd64/node_exporter /usr/local/bin/
 
 if [ $? -ne 0 ]; then
     echo "${RED}Failed to install Prometheus Node Exporter.${NC}"
@@ -49,7 +49,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Clean up
-rm -rf node_exporter-${latest_version}.linux-amd64 $file_name
+rm -rf node_exporter-${latest_version#v}.linux-amd64 $file_name
 
 # Create a dedicated user for Prometheus Node Exporter
 echo "${YELLOW}Creating dedicated user for Prometheus Node Exporter...${NC}"
