@@ -18,13 +18,13 @@ fi
 show_checkboxes() {
     whiptail --title "Development Environment Setup" --checklist \
     "Choose options to install:" 20 78 10 \
-    "Configure_Git" "" OFF \
-    "Install_Zsh" "" OFF \
-    "Install_Oh_My_Zsh" "" OFF \
-    "Install_tldr" "" OFF \
-    "Install_Ansible" "" OFF \
-    "Install_passlib_for_Python_3" "" OFF \
-    "Install_Node_Version_Manager_(NVM)" "" OFF 3>&1 1>&2 2>&3
+    "Configure_Git" "" ON \
+    "Install_Zsh" "" ON \
+    "Install_Oh_My_Zsh" "" ON \
+    "Install_tldr" "" ON \
+    "Install_Ansible" "" ON \
+    "Install_passlib_for_Python_3" "" ON \
+    "Install_Node_Version_Manager_(NVM)" "" ON 3>&1 1>&2 2>&3
 }
 
 # Get user selections
