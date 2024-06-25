@@ -8,49 +8,56 @@ source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/lib/cli-colors
 
 echo "${YELLOW}Development Environment Setup${NC}"
 
-# Function to ask user for choice
-ask_choice() {
-    while true; do
-        read -p "$1 [y/n]: " choice
-        case "$choice" in
-            y|Y ) return 0;;
-            n|N ) return 1;;
-            * ) echo "Please answer y or n.";;
-        esac
+# Function to show checkbox options
+show_checkboxes() {
+    options=(
+        "Configure Git"
+        "Install Zsh"
+        "Install Oh My Zsh"
+        "Install tldr"
+        "Install Ansible"
+        "Install passlib for Python 3"
+        "Install Node Version Manager (NVM)"
+    )
+
+    selections=()
+
+    for opt in "${options[@]}"; do
+        selections+=("false")
     done
+
+    for i in "${!options[@]}"; do
+        read -p "${options[$i]}? [y/n]: " choice
+        if [[ "$choice" =~ ^[yY]$ ]]; then
+            selections[$i]="true"
+        fi
+    done
+
+    echo "${selections[@]}"
 }
+
+# Get user selections
+selections=($(show_checkboxes))
 
 # Update and upgrade the distro
 echo "${YELLOW}Updating and upgrading the distro...${NC}"
 sudo apt update && sudo apt upgrade -y
 
-# Prompt for each module
-if ask_choice "Do you want to configure Git?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/configure_git.sh)
-fi
+# Execute based on selections
+modules=(
+    "https://github.com/pabloflego/scripts/raw/main/modules/configure_git.sh"
+    "https://github.com/pabloflego/scripts/raw/main/modules/install_zsh.sh"
+    "https://github.com/pabloflego/scripts/raw/main/modules/install_oh_my_zsh.sh"
+    "https://github.com/pabloflego/scripts/raw/main/modules/install_tldr.sh"
+    "https://github.com/pabloflego/scripts/raw/main/modules/install_ansible.sh"
+    "https://github.com/pabloflego/scripts/raw/main/modules/install_passlib.sh"
+    "https://github.com/pabloflego/scripts/raw/main/modules/install_nvm.sh"
+)
 
-if ask_choice "Do you want to install Zsh?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_zsh.sh)
-fi
-
-if ask_choice "Do you want to install Oh My Zsh?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_oh_my_zsh.sh)
-fi
-
-if ask_choice "Do you want to install tldr?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_tldr.sh)
-fi
-
-if ask_choice "Do you want to install Ansible?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_ansible.sh)
-fi
-
-if ask_choice "Do you want to install passlib for Python 3?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_passlib.sh)
-fi
-
-if ask_choice "Do you want to install Node Version Manager (NVM)?"; then
-    source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/module/install_nvm.sh)
-fi
+for i in "${!selections[@]}"; do
+    if [ "${selections[$i]}" == "true" ]; then
+        source <(wget -qO- "${modules[$i]}")
+    fi
+done
 
 echo "${GREEN}Development environment setup complete!${NC}"
