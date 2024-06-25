@@ -43,20 +43,24 @@ selections=($(show_checkboxes))
 echo "${YELLOW}Updating and upgrading the distro...${NC}"
 sudo apt update && sudo apt upgrade -y
 
-# Execute based on selections
+# Base URL for modules
+BASE_URL="https://github.com/pabloflego/scripts/raw/main/modules"
+
+# List of modules
 modules=(
-    "https://github.com/pabloflego/scripts/raw/main/modules/configure_git.sh"
-    "https://github.com/pabloflego/scripts/raw/main/modules/install_zsh.sh"
-    "https://github.com/pabloflego/scripts/raw/main/modules/install_oh_my_zsh.sh"
-    "https://github.com/pabloflego/scripts/raw/main/modules/install_tldr.sh"
-    "https://github.com/pabloflego/scripts/raw/main/modules/install_ansible.sh"
-    "https://github.com/pabloflego/scripts/raw/main/modules/install_passlib.sh"
-    "https://github.com/pabloflego/scripts/raw/main/modules/install_nvm.sh"
+    "configure_git.sh"
+    "install_zsh.sh"
+    "install_oh_my_zsh.sh"
+    "install_tldr.sh"
+    "install_ansible.sh"
+    "install_passlib.sh"
+    "install_nvm.sh"
 )
 
+# Execute based on selections
 for i in "${!selections[@]}"; do
     if [ "${selections[$i]}" == "true" ]; then
-        source <(wget -qO- "${modules[$i]}")
+        source <(wget -qO- "${BASE_URL}/${modules[$i]}")
     fi
 done
 
