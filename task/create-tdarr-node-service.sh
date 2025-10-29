@@ -7,10 +7,10 @@
 source <(wget -qO- https://github.com/pabloflego/scripts/raw/main/lib/cli-colors.sh)
 
 # Define binary path
-BINARY_PATH="/home/users/pablo/tdarr/Tdarr_Node/Tdarr_Node"
+WORKING_DIR="/home/pablo/tdarr/Tdarr_Node"
+BINARY_PATH="${WORKING_DIR}/Tdarr_Node"
 SERVICE_NAME="tdarr-node"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
-WORKING_DIR="/home/users/pablo/tdarr/Tdarr_Node"
 
 # Check if binary exists
 echo "${YELLOW}Checking if Tdarr_Node binary exists...${NC}"
