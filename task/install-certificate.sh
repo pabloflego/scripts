@@ -17,27 +17,43 @@ fi
 CA_CERT_URL="https://github.com/pabloflego/scripts/raw/main/ca/pablinCA.crt"
 CA_CERT_DIR="/usr/local/share/ca-certificates"
 CA_CERT_FILE="$CA_CERT_DIR/pablinCA.crt"
-
-echo "${YELLOW}Downloading CA certificate...${NC}"
-mkdir -p "$CA_CERT_DIR"
-wget -q "$CA_CERT_URL" -O "$CA_CERT_FILE"
-
-if [[ $? -ne 0 ]]; then
-    echo "${RED}Failed to download CA certificate${NC}"
-    exit 1
-fi
-echo "${GREEN}CA certificate downloaded${NC}"
+TEMP_CERT_FILE="/tmp/pablinCA.crt"
 
 # Check if certificate already exists
 if [[ -f "$CA_CERT_FILE" ]]; then
+    echo "${YELLOW}CA certificate already exists, checking if update needed...${NC}"
+    
+    # Download to temp location for comparison
+    wget -q "$CA_CERT_URL" -O "$TEMP_CERT_FILE"
+    
+    if [[ $? -ne 0 ]]; then
+        echo "${RED}Failed to download CA certificate for comparison${NC}"
+        exit 1
+    fi
+    
     EXISTING_HASH=$(openssl x509 -noout -modulus -in "$CA_CERT_FILE" 2>/dev/null | openssl md5)
-    DOWNLOADED_HASH=$(openssl x509 -noout -modulus -in "$CA_CERT_FILE" 2>/dev/null | openssl md5)
+    DOWNLOADED_HASH=$(openssl x509 -noout -modulus -in "$TEMP_CERT_FILE" 2>/dev/null | openssl md5)
     
     if [[ "$EXISTING_HASH" == "$DOWNLOADED_HASH" ]]; then
         echo "${GREEN}CA certificate already installed and up to date. Task skipped.${NC}"
+        rm -f "$TEMP_CERT_FILE"
         exit 0
     fi
+    
+    echo "${YELLOW}Updating CA certificate...${NC}"
+    mv "$TEMP_CERT_FILE" "$CA_CERT_FILE"
+else
+    echo "${YELLOW}Downloading CA certificate...${NC}"
+    mkdir -p "$CA_CERT_DIR"
+    wget -q "$CA_CERT_URL" -O "$CA_CERT_FILE"
+    
+    if [[ $? -ne 0 ]]; then
+        echo "${RED}Failed to download CA certificate${NC}"
+        exit 1
+    fi
 fi
+
+echo "${GREEN}CA certificate installed${NC}"
 
 # Update CA certificates
 echo "${YELLOW}Updating CA certificates...${NC}"
